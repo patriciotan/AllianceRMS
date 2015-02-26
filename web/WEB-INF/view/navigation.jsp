@@ -51,7 +51,6 @@
                 <li id="1"><a href="outlook">Project Outlook</a></li>
                 <li id="2"><a href="pSummary">Project Summary</a></li>
                 <li id="3"><a href="rSummary">Resource Summary</a></li>
-                <li id="4"><a href="cSummary">Client Summary</a></li>
             </ol>
             <ol class="nav navbar-nav navbar-right" style="margin-right: -124px">
                 <li class="dropdown navbar-right">

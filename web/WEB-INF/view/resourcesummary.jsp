@@ -118,11 +118,6 @@
                                     </div>
                                     <div class="panel-body">
                                         <div id="chartContainer" style="height:390px;"></div>
-<!--                                        <input id="phVal" type="hidden" value=${summary.ph}>
-                                        <input id="jpVal" type="hidden" value=${summary.jap}>
-                                        <input id="rwVal" type="hidden" value=${summary.row}>
-                                        <input id="alVal" type="hidden" value=${summary.alli}>
-                                        <input id="unVal" type="hidden" value=${summary.unassigned}>-->
                                     </div>
                                     <div class="panel-footer">
                                         <div style="text-align: right;">

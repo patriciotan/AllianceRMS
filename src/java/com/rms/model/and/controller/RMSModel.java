@@ -23,10 +23,7 @@ public class RMSModel {
 //    DataSource ds;
     
     String JDBC_DRIVER="com.mysql.jdbc.Driver";
-//    String DB_URL="jdbc:mysql://mysql17973-alliancerms.jelastic.skali.net/rms";
-//    String USER="root";
-//    String PASS="mIkJTyx1FJ";
-    String DB_URL="jdbc:mysql://localhost/rms";
+    String DB_URL="jdbc:mysql://localhost/alliance";
     String USER="root";
     String PASS="";
     String sql;
@@ -76,18 +73,7 @@ public class RMSModel {
             return true;
         return false;
     }
-    
-    public boolean clientExists(String name) throws Exception {
-        PreparedStatement ps;
-        sql = "select * from client where name=?";
-        ps = con.prepareStatement(sql);
-        ps.setString(1, name);
-        rs = ps.executeQuery();
-        
-        if(rs.first())
-            return true;
-        return false;
-    }
+  
     
     public ResultSet getUser(String username, String password) throws Exception{
         PreparedStatement ps;
@@ -108,55 +94,13 @@ public class RMSModel {
         return false;
     }
 
-    public boolean addProject(String name, int clientId, String start, String end, String type, String status, String bUnit, String reference, int created_by, String created_date) throws Exception {
-        sql = "insert into project (name,client_id,start_date,end_date,type,status,business_unit,reference,added_by,added_date) values ('"+name+"',"+clientId+",'"+start+"','"+end+"','"+type+"','"+status+"','"+bUnit+"','"+reference+"',"+created_by+",'"+created_date+"')";
+    public boolean addProject(String name,String start, String end, String type, String status, String bUnit, String reference, int created_by, String created_date) throws Exception {
+        sql = "insert into project (name,start_date,end_date,type,status,business_unit,reference,added_by,added_date) values ('"+name+"','"+start+"','"+end+"','"+type+"','"+status+"','"+bUnit+"','"+reference+"',"+created_by+",'"+created_date+"')";
         if(st.executeUpdate(sql) > 0)
             return true;
         return false;
     }
-    
-    public boolean addClient(String name, int addedBy, String addedDate) throws Exception {
-        sql = "insert into client (name,added_by,added_date) values ('"+name+"',"+addedBy+",'"+addedDate+"')";
-        System.out.println(sql);
-        if(st.executeUpdate(sql)>0){
-            rs= st.executeQuery("SELECT LAST_INSERT_ID() as last");
-            rs.next();
-            System.out.println(rs.getInt("last"));
-            sql = "insert into user (client_id,username,password,type) VALUES ("+rs.getInt("last")+",'"+name+"',MD5('user'),'Client')";
-            if(st.executeUpdate(sql)>0)
-                return true;
-            return false;
-        }
-        return false;
-    }
-    
-    public boolean addFeedback(int taskId, String subject, String content, int added_by, String added_date) throws Exception {
-        sql = "insert into feedback (task_id,subject,content,added_by,added_date) values ("+taskId+",'"+subject+"','"+content+"',"+added_by+",'"+added_date+"')";
-        System.out.println(sql);
-        if(st.executeUpdate(sql) > 0)
-            return true;
-        return false;
-    }
-    
-    public ResultSet getFeedbacks(int taskId) throws Exception
-    {
-        PreparedStatement ps;
-        sql = "select feedback.*,resource.* from feedback join resource on resource.resource_id = feedback.added_by where task_id=? order by feedback.added_date desc";
-        ps = con.prepareStatement(sql);
-        ps.setInt(1, taskId);
-        rs = ps.executeQuery();
-        
-        return rs;
-    }
-    
-    public boolean updateRemarks(int projId, String remarks) throws Exception
-    {
-        sql = "UPDATE project SET remarks='"+remarks+"' WHERE project_id="+projId;
-        System.out.println(sql);
-        if(st.executeUpdate(sql) > 0)
-            return true;
-        return false;
-    }
+ 
     
     public ResultSet getOutlook() throws Exception
     {
@@ -192,12 +136,12 @@ public class RMSModel {
         return rs;
     }
     
-    public ResultSet getEmployeesNotTask(int taskId) throws Exception
+    public ResultSet getEmployeesNotProject(int projId) throws Exception
     {
         PreparedStatement ps;
-        sql = "SELECT * FROM resource WHERE resource_id NOT IN (SELECT resource.resource_id FROM resource JOIN effort ON effort.resource_id=resource.resource_id WHERE effort.task_id=?)";
+        sql = "SELECT * FROM resource WHERE resource_id NOT IN (SELECT resource.resource_id FROM resource JOIN effort ON effort.resource_id=resource.resource_id WHERE effort.project_id=?)";
         ps = con.prepareStatement(sql);
-        ps.setInt(1, taskId);
+        ps.setInt(1, projId);
         rs = ps.executeQuery();
         
         return rs;
@@ -210,20 +154,6 @@ public class RMSModel {
         System.out.println(sql);
         ps = con.prepareStatement(sql);
         ps.setInt(1, resId);
-        rs = ps.executeQuery();
-        
-        return rs;
-    }
-    
-    public ResultSet getMyProjects(int resId) throws Exception
-    {
-        PreparedStatement ps;
-        sql = "SELECT project.*,effort.* FROM project JOIN effort ON project.project_id = effort.project_id WHERE effort.resource_id=? and reference=? and status!=? order by project.added_date desc";
-        System.out.println(sql);
-        ps = con.prepareStatement(sql);
-        ps.setInt(1, resId);
-        ps.setString(2, "Summary");
-        ps.setString(3, "Closed");
         rs = ps.executeQuery();
         
         return rs;
@@ -263,31 +193,8 @@ public class RMSModel {
         rs = ps.executeQuery();
         
         return rs;
-    }
+    }  
     
-    public ResultSet getResourcesTasks(int taskId) throws Exception
-    {
-        PreparedStatement ps;
-        sql = "SELECT resource.*,effort.* FROM resource JOIN effort ON resource.resource_id = effort.resource_id WHERE effort.task_id = ?";
-        System.out.println(sql);
-        ps = con.prepareStatement(sql);
-        ps.setInt(1, taskId);
-        rs = ps.executeQuery();
-        
-        return rs;
-    } 
-    
-    public ResultSet getTasksProjects(int projId) throws Exception
-    {
-        PreparedStatement ps;
-        sql = "SELECT * FROM task WHERE project_id=?";
-        System.out.println(sql);
-        ps = con.prepareStatement(sql);
-        ps.setInt(1, projId);
-        rs = ps.executeQuery();
-        
-        return rs;
-    }
         
     public ResultSet getEmployeeProjects(int resId) throws Exception
     {
@@ -309,6 +216,16 @@ public class RMSModel {
         rs = ps.executeQuery();
         rs.next();
         return rs.getString("name");
+    }
+    
+    public ResultSet getProjectResources(int projId) throws Exception
+    {
+       PreparedStatement ps;
+        sql="SELECT resource.*,effort.* FROM resource JOIN effort on resource.resource_id=effort.resource_id WHERE project_id=?";
+        ps = con.prepareStatement(sql);
+        ps.setInt(1, projId);
+        rs = ps.executeQuery();
+        return rs; 
     }
     
     public ResultSet getProject(int projId) throws Exception
@@ -345,27 +262,27 @@ public class RMSModel {
         return false;
     }
     
-    public boolean editSummary(String name,int clientId, String start, String end, String type, String bUnit,int projectId,String miles,int updated_by,String updated_date) throws Exception {
-        sql = "UPDATE project SET name='"+name+"',client_id="+clientId+",start_date='"+start+"',end_date='"+end+"',type='"+type+"',business_unit='"+bUnit+"',milestone='"+miles+"',updated_by="+updated_by+",updated_date='"+updated_date+"' WHERE project_id="+projectId;
+    public boolean editSummary(String name, String start, String end, String type, String bUnit,int projectId,int updated_by,String updated_date) throws Exception {
+        sql = "UPDATE project SET name='"+name+"',start_date='"+start+"',end_date='"+end+"',type='"+type+"',business_unit='"+bUnit+"',updated_by="+updated_by+",updated_date='"+updated_date+"' WHERE project_id="+projectId;
         System.out.println(sql);
         if(st.executeUpdate(sql) > 0)
             return true;
         return false;
     }
     
-    public boolean assignResource(int empId,int taskId,int projId, int year, float jan, float feb, float mar, float apr, float may, float jun, float jul, float aug, float sep, float oct, float nov, float dece) throws Exception
+    public boolean assignResource(int empId,int projId, int year, float jan, float feb, float mar, float apr, float may, float jun, float jul, float aug, float sep, float oct, float nov, float dece) throws Exception
     {
-        sql = "insert into effort (project_id,task_id,resource_id,year,jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dece) values ("+projId+","+taskId+","+empId+","+year+","+jan+","+feb+","+mar+","+apr+","+may+","+jun+","+jul+","+aug+","+sep+","+oct+","+nov+","+dece+")";
+        sql = "insert into effort (project_id,resource_id,year,jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dece) values ("+projId+","+empId+","+year+","+jan+","+feb+","+mar+","+apr+","+may+","+jun+","+jul+","+aug+","+sep+","+oct+","+nov+","+dece+")";
         System.out.println("-------------------"+sql+"--------------------");
         if(st.executeUpdate(sql) > 0)
             return true;
         return false;
     }
     
-    public boolean editResource(int effortId,int performance,int year, float jan, float feb, float mar, float apr, float may, float jun, float jul, float aug, float sep, float oct, float nov, float dece) throws Exception
+    public boolean editResource(int effortId,int year, float jan, float feb, float mar, float apr, float may, float jun, float jul, float aug, float sep, float oct, float nov, float dece) throws Exception
     {
         PreparedStatement ps;
-        sql="UPDATE effort SET jan=?, feb=?, mar=?, apr=?, may=?, jun=?, jul=?, aug=?, sep=?, oct=?, nov=?, dece=?, performance=? WHERE effort_id=? AND year=?";
+        sql="UPDATE effort SET jan=?, feb=?, mar=?, apr=?, may=?, jun=?, jul=?, aug=?, sep=?, oct=?, nov=?, dece=? WHERE effort_id=? AND year=?";
         ps = con.prepareStatement(sql);
         ps.setFloat(1,jan);
         ps.setFloat(2,feb);
@@ -379,20 +296,31 @@ public class RMSModel {
         ps.setFloat(10,oct);
         ps.setFloat(11,nov);
         ps.setFloat(12,dece);
-        ps.setInt(13,performance);
-        ps.setInt(14,effortId);
-        ps.setInt(15, year);
+        ps.setInt(13,effortId);
+        ps.setInt(14, year);
         if(ps.executeUpdate()==1)
             return true;
         return false;
     }
     
-    public boolean deleteResource(int taskId,int empId) throws Exception
+    public boolean deleteResourcesInProject(int projId) throws Exception
     {
         PreparedStatement ps;
-        sql="DELETE FROM effort WHERE task_id=? AND resource_id=?";
+        sql="DELETE FROM effort WHERE project_id=?";
         ps = con.prepareStatement(sql);
-        ps.setInt(1,taskId);
+        ps.setInt(1,projId);
+        if(ps.executeUpdate()>0)
+            return true;
+        return false;
+    }
+    
+    
+    public boolean deleteResource(int projId,int empId) throws Exception
+    {
+        PreparedStatement ps;
+        sql="DELETE FROM effort WHERE project_id=? AND resource_id=?";
+        ps = con.prepareStatement(sql);
+        ps.setInt(1,projId);
         ps.setInt(2,empId);
         if(ps.executeUpdate()>0)
             return true;
@@ -455,109 +383,6 @@ public class RMSModel {
         x=a-b;
         System.out.println("UNASSIGNED IS "+x);
         return x;
-    }
-    
-    //for PM's
-    public ResultSet getClientProject() throws Exception{
-        PreparedStatement ps;
-        sql = "select client.name as cname,project.* from client JOIN project ON client.client_id=project.client_id";
-        ps = con.prepareStatement(sql);
-        rs = ps.executeQuery();
-        
-        return rs;
-    }
-    
-    //for CLIENT
-    public ResultSet getClientProject(int client_id) throws Exception{
-        PreparedStatement ps;
-        sql = "select client.name as cname,project.* from client JOIN project ON client.client_id=project.client_id WHERE client.client_id=?";
-        ps = con.prepareStatement(sql);
-        ps.setInt(1,client_id);
-        rs = ps.executeQuery();
-        
-        return rs;
-    }
-    
-    public ResultSet getClient() throws Exception{
-        PreparedStatement ps;
-        sql = "select * FROM client ORDER BY added_date desc";
-        ps = con.prepareStatement(sql);
-        rs = ps.executeQuery();
-        
-        return rs;
-    }
-    
-    public ResultSet getSpecificClient(int id) throws Exception{
-        PreparedStatement ps;
-        sql = "select * from client where client_id="+id;
-        ps = con.prepareStatement(sql);
-        rs = ps.executeQuery();
-        
-        return rs;
-    }
-    
-    public boolean addTask(String name,int projId,String start, String end) throws Exception{
-        sql = "insert into task (name,project_id,start_date,end_date) values ('"+name+"',"+projId+",'"+start+"','"+end+"')";
-        System.out.println(sql);
-        if(st.executeUpdate(sql) > 0)
-            return true;
-        return false;
-    }
-    
-    public boolean deleteTask(int projId,int taskId) throws Exception{
-        PreparedStatement ps;
-        sql = "DELETE FROM task where task_id=?";
-        System.out.println(sql+taskId);
-        ps = con.prepareStatement(sql);
-        ps.setInt(1, taskId);
-        if(ps.executeUpdate()>0){
-            deleteResourcesInTask(projId, taskId);
-            return true;
-        }
-        return false;
-    }
-    
-    public void deleteResourcesInTask(int projId,int taskId) throws Exception{
-        PreparedStatement ps;
-        sql= "DELETE FROM effort where task_id=? AND project_id=?";
-        System.out.println(sql+taskId+"--"+projId);
-        ps = con.prepareStatement(sql);
-        ps.setInt(1, taskId);
-        ps.setInt(2,projId);
-        ps.executeUpdate();
-    }
-    
-    public boolean editTask(int taskId, String name, String status) throws Exception{
-        PreparedStatement ps;
-        sql = "UPDATE task SET name=?, status=? WHERE task_id=?";
-        System.out.println(sql+taskId);
-        ps = con.prepareStatement(sql);
-        ps.setString(1, name);
-        ps.setString(2, status);
-        ps.setInt(3, taskId);
-         if(ps.executeUpdate() > 0)
-            return true;
-        return false;
-    }
-    
-    public int getNumberOfResourcesProject(int projId) throws Exception{
-        PreparedStatement ps;
-        sql = "SELECT COUNT(DISTINCT resource_id) as cnt FROM effort WHERE project_id=?";
-        ps = con.prepareStatement(sql);
-        ps.setInt(1, projId);
-        rs = ps.executeQuery();
-        rs.next();
-        return rs.getInt("cnt");
-    }
-    
-    public ResultSet getTask(int taskid) throws Exception{
-        PreparedStatement ps;
-        sql = "SELECT * FROM task WHERE task_id=?";
-        ps = con.prepareStatement(sql);
-        ps.setInt(1, taskid);
-        rs = ps.executeQuery();
-        
-        return rs;
     }
     
 }

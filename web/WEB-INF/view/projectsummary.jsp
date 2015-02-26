@@ -38,13 +38,10 @@
             <thead>
                 <tr>
                     <th style="text-align: left"><b>Name</b></th>
-                    <th style="text-align: left"><b>Client Name</b></th>
-                    <th style="display:none"></th>
                     <th style="text-align: left"><b>Start Date</b></th>
                     <th style="text-align: left"><b>End Date</b></th>
                     <th style="text-align: left"><b>Type</b></th>
                     <th style="text-align: left"><b>Business Unit</b></th>
-                    <th style="text-align: left"><b>Current Milestone</b></th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -56,13 +53,10 @@
                         <input type="hidden" name="getId" class="projId" value="${project.projectId}"/>
                         <td style="text-align: left" class="projectName"><a href="" class="projectnamelink" data-toggle="tooltip" data-placement="top" title="Click to view project tasks"><c:out value="${project.name}" /></a></td>
                     </form>
-                    <td style="text-align: left" class="clientN"><c:out value="${project.clientName}" /></td>
-                    <td style="display:none" class="clientI"><c:out value="${project.clientId}" /></td>
                     <td style="text-align: left" class="startDate"><c:out value="${project.start}" /></td>
                     <td style="text-align: left" class="endDate"><c:out value="${project.end}" /></td>
                     <td style="text-align: left" class="projType"><c:out value="${project.type}" /></td>
                     <td style="text-align: left" class="bUnit"><c:out value="${project.bUnit}" /></td>
-                    <td style="text-align: left" class="mileSto"><c:out value="${project.milestone}" /></td>
                     <td><button class="btn btn-warning editOption" data-toggle="modal" data-target="#editProject">
                             <span style="color: #333333" class="glyphicon glyphicon-pencil" aria-hidden="true"></span> <b>Edit</b>
                         </button></td>
@@ -94,15 +88,6 @@
                                 <div class="form-group">
                                     <label for="">Name<font style="margin-left:20px;display:none;" color="red" id="error1"></font></label>
                                     <input class="form-control" autocomplete="off" required="required" id="name1" type="text" name="name" maxlength="30" pattern=".{4,30}" title="4 to 30 Characters">
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Client Name</label>
-                                    <select class="form-control" name="clientId" required="required">
-                                        <option disabled="true" selected default></option>
-                                        <c:forEach items="${clients}" var="client">
-                                            <option value="${client.clientId}"><c:out value="${client.name}" /></option>
-                                        </c:forEach>
-                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="">Start Date</label>
@@ -168,14 +153,6 @@
                                     <input class="form-control" autocomplete="off" required="required" id="field1" type="text" name="name" maxlength="30" pattern=".{4,30}" title="4 to 30 Characters">
                                 </div>
                                 <div class="form-group">
-                                    <label for="">Client Name</label>
-                                    <select class="form-control" name="clientId" required="required" id="field6">
-                                        <c:forEach items="${clients}" var="client">
-                                            <option value="${client.clientId}"><c:out value="${client.name}" /></option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                                <div class="form-group">
                                     <label for="">Start Date</label>
                                     <input class="form-control" type="date" id="field2" required="required" name="start">
                                 </div>
@@ -198,10 +175,6 @@
                                         <option value="Rest of the World">Rest of the World</option>
                                         <option value="Alliance">Alliance</option>
                                     </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Current Milestone</label>
-                                    <input class="form-control" type="text" name="milestone" required="required" id="field7" />
                                 </div>
                             </div>
                             <div class="panel-footer">
@@ -364,23 +337,6 @@
                $("#field3").val($(this).parent().siblings(".endDate").text());
                $("#field4").val($(this).parent().siblings(".projType").text());
                $("#field5").val($(this).parent().siblings(".bUnit").text()); 
-               $("#field6").val($(this).parent().siblings(".clientI").text());
-               $("#field7").val($(this).parent().siblings(".mileSto").text());
-               $.ajax({
-                    url:'checkProjectTask.htm',
-                    type:'post',
-                    data:{'id':$(this).parent().siblings(".projId").val()},
-                    success:function(data,status){
-                        var x = data.toString();
-                        if(x=="1"){
-                            $("#field2").attr("readonly","true");
-                            $("#field3").attr("readonly","true");
-                        }else{
-                            $("#field2").removeAttr("readonly");
-                            $("#field3").removeAttr("readonly");
-                        }
-                    }
-                });
             });
         
             $("#projTable").on("click","a.projectnamelink",function(){

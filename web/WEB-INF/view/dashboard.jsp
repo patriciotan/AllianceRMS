@@ -36,7 +36,7 @@
         <div class="col-md-4 col-sm-6">
             <div class="well"> 
                 <form class="form">
-                    <h5><b>Add new project or client</b></h5>
+                    <h5><b>Add new project</b></h5>
                     <br/>
                     <div style="width: 100%" class="input-group text-center">
                         <button style="width: 80%;" class="btn btn-primary" type="button" data-toggle="modal" data-target="#addProject">
@@ -44,28 +44,8 @@
                         </button>
                     </div>
                     <br/>
-                    <div style="width: 100%" class="input-group text-center">
-                        <button style="width: 80%;" class="btn btn-primary" type="button" data-toggle="modal" data-target="#addClient">
-                            <span style="color: #333333" class="glyphicon glyphicon-plus" aria-hidden="true"></span> <b>New client</b>
-                        </button>
-                    </div>
                 </form>
                 <br/>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading"><a href="cSummary" class="pull-right">View more</a> <h5><b>Latest clients added</b></h5></div>
-                <div class="panel-body">
-                    <div>
-                        <ol class="list-group">
-                            <c:forEach end="2" items="${clients}" var="client">
-                            <li class="list-group-item">
-                                <span class="badge">${client.addedDate}</span>
-                                <code>${client.name}</code>
-                            </li>
-                            </c:forEach>
-                        </ol>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -177,40 +157,6 @@
     </div>
     <!-- End modal for add project-->
 
-<!-- Start modal for add client-->            
-    <div class="modal fade" id="addClient" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content-sm">
-                <div class="modal-body-sm">
-                    <div class="panel panel-primary">  
-                        <div class="panel-heading">
-                            <b>Add Client</b>
-                        </div>
-                        <form id="add" name="add" action='<c:url value="addClient"/>' method="post" modelAttribute="client">
-                            <div class="panel-body">
-                                <div class="form-group">
-                                    <label for="">Name<font style="margin-left:20px;display:none;" color="red" id="cerror1"></font></label>
-                                    <input class="form-control" autocomplete="off" required="required"  type="text" name="name" id="cname1" maxlength="30" pattern=".{4,30}" title="4 to 30 Characters">
-                                </div>
-                            </div>
-                            <div class="panel-footer">
-                                <div style="text-align: right">
-                                    <input value="Outlook" name="reference" hidden="hidden">
-                                    <button class="btn btn-success" id="add-but" type="submit">
-                                        <span style="color: #333333" class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> <b>Submit</b>
-                                    </button>
-                                    <button class="btn btn-danger" type="button" data-dismiss="modal">
-                                        <span style="color: #333333" class="glyphicon glyphicon-remove" aria-hidden="true"></span> <b>Cancel</b>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End modal for add client-->
 
 </div>
 </div>
