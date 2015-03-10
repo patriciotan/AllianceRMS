@@ -15,7 +15,7 @@
     <div class="row">
         <div class="col-md-4 col-sm-6">
             <div class="panel panel-default">
-                <div class="panel-heading"><a href="rSummary" class="pull-right">View more</a> <h5><b>Under loaded resources for February</b></h5></div>
+                <div class="panel-heading"><a href="rSummary" class="pull-right">View more</a> <h5><b>Under loaded resources for ${month}</b></h5></div>
                 <div class="panel-body">
                     <ul id="underl" class="list-group">
                         <c:forEach items="${underload}" var="ul">

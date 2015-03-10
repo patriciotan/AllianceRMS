@@ -326,10 +326,16 @@ public class RMSController {
         List<Project> projects = getSummary(); 
         
         if(request.getSession().getAttribute("sessVar")!=null){
+            SimpleDateFormat sdf = new SimpleDateFormat("MMMM");
+            Calendar c = Calendar.getInstance();
+            Date now = c.getTime();
+            int year = c.get(Calendar.YEAR);
+            String month = sdf.format(now);
             mav.addObject("title","RMS - Dashboard");
             mav.addObject("underload",getUnderloadWhole());
             mav.addObject("projects",projects);
             mav.addObject("unPro",getNextUnpro());
+            mav.addObject("month",month);
         }else{
             mav=new ModelAndView("redirect:/login"); 
         }
