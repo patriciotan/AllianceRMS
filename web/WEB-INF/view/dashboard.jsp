@@ -101,15 +101,6 @@
                                     <input class="form-control" autocomplete="off" required="required"  type="text" name="name" id="name1" maxlength="30" pattern=".{4,30}" title="4 to 30 Characters">
                                 </div>
                                 <div class="form-group">
-                                    <label for="">Client Name</label>
-                                    <select class="form-control" name="clientId" required="required" >
-                                        <option disabled="true" selected default></option>
-                                        <c:forEach items="${clients}" var="client">
-                                            <option value="${client.clientId}"><c:out value="${client.name}" /></option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                                <div class="form-group">
                                     <label for="">Start Date</label>
                                     <input class="form-control" type="date"  required="required" name="start" id="start1">
                                 </div>
