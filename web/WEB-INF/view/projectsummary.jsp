@@ -16,13 +16,6 @@
                     <span style="color: #333333" class="glyphicon glyphicon-export" aria-hidden="true"></span> <b>Export table</b> <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="#" onClick ="$('#projSummary').tableExport({type:'json',escape:'false'});"> <img src='<c:url value="/res/images/json.png"/>' width='16px'> JSON</a></li>
-                    <li><a href="#" onClick ="$('#projSummary').tableExport({type:'json',escape:'false',ignoreColumn:'[2,3]'});"> <img src='<c:url value="/res/images/json.png"/>' width='16px'> JSON (ignoreColumn)</a></li>
-                    <li><a href="#" onClick ="$('#projSummary').tableExport({type:'json',escape:'true'});"> <img src='<c:url value="/res/images/json.png"/>' width='16px'> JSON (with Escape)</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#" onClick ="$('#projSummary').tableExport({type:'xml',escape:'false'});"> <img src='<c:url value="/res/images/xml.png"/>' width='16px'> XML</a></li>
-                    <li><a href="#" onClick ="$('#projSummary').tableExport({type:'sql'});"> <img src='<c:url value="/res/images/sql.png"/>' width='16px'> SQL</a></li>
-                    <li class="divider"></li>
                     <li><a href="#" onClick ="$('#projSummary').tableExport({type:'excel',escape:'false'});"> <img src='<c:url value="/res/images/xls.png"/>' width='16px'> XLS</a></li>
                     <li><a href="#" onClick ="$('#projSummary').tableExport({type:'csv',escape:'false'});"> <img src='<c:url value="/res/images/csv.png"/>' width='16px'> CSV</a></li>
                     <li><a href="#" onClick ="$('#projSummary').tableExport({type:'txt',escape:'false'});"> <img src='<c:url value="/res/images/txt.png"/>' width='16px'> TXT</a></li>
@@ -232,7 +225,12 @@
     <script>
         $(document).ready(function(){
             $("#2").attr("class","active"); 
-            $("#projSummary").dataTable();
+            $("#projSummary").dataTable({
+               "oLanguage":{
+                   "sInfoEmpty":'No Projects To Show',
+                   "sEmptyTable":'No Projects To Show',
+               }
+           });
             $(".projectnamelink").tooltip();
             
             $("#name1").change(function(){

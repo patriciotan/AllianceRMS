@@ -411,7 +411,6 @@ public class RMSController {
             mav.addObject("year",year);
             mav.addObject("month",month);
             mav.addObject("underload",getUnderload());
-            mav.addObject("overload",getOverload());
         }else{
             mav=new ModelAndView("redirect:/login"); 
         }

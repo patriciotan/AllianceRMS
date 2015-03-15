@@ -16,13 +16,6 @@
                     <span style="color: #333333" class="glyphicon glyphicon-export" aria-hidden="true"></span> <b>Export table</b> <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="#" onClick ="$('#respSummary').tableExport({type:'json',escape:'false'});"> <img src='<c:url value="/res/images/json.png"/>' width='16px'> JSON</a></li>
-                    <li><a href="#" onClick ="$('#respSummary').tableExport({type:'json',escape:'false',ignoreColumn:'[2,3]'});"> <img src='<c:url value="/res/images/json.png"/>' width='16px'> JSON (ignoreColumn)</a></li>
-                    <li><a href="#" onClick ="$('#respSummary').tableExport({type:'json',escape:'true'});"> <img src='<c:url value="/res/images/json.png"/>' width='16px'> JSON (with Escape)</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#" onClick ="$('#respSummary').tableExport({type:'xml',escape:'false'});"> <img src='<c:url value="/res/images/xml.png"/>' width='16px'> XML</a></li>
-                    <li><a href="#" onClick ="$('#respSummary').tableExport({type:'sql'});"> <img src='<c:url value="/res/images/sql.png"/>' width='16px'> SQL</a></li>
-                    <li class="divider"></li>
                     <li><a href="#" onClick ="$('#respSummary').tableExport({type:'excel',escape:'false'});"> <img src='<c:url value="/res/images/xls.png"/>' width='16px'> XLS</a></li>
                     <li><a href="#" onClick ="$('#respSummary').tableExport({type:'csv',escape:'false'});"> <img src='<c:url value="/res/images/csv.png"/>' width='16px'> CSV</a></li>
                     <li><a href="#" onClick ="$('#respSummary').tableExport({type:'txt',escape:'false'});"> <img src='<c:url value="/res/images/txt.png"/>' width='16px'> TXT</a></li>
@@ -271,7 +264,12 @@
     <script>
         $(document).ready(function(){
            $("#2").attr("class","active"); 
-           $(".resProjects").dataTable();
+           $(".resProjects").dataTable({
+               "oLanguage":{
+                   "sInfoEmpty":'No Resources To Show',
+                   "sEmptyTable":'No Resources To Show',
+               }
+           });
            $(".resourceRow").tooltip();
            
            $("#end1").change(function(){
@@ -325,31 +323,31 @@
                 var startMonth = start.substring(5,7);
                 var endMonth = end.substring(5,7);
                 
-                for(var i=1;i<=12;i++){
-                    $("#e"+i).attr("disabled","true");
-                }
+//                for(var i=1;i<=12;i++){
+//                    $("#e"+i).attr("disabled","true");
+//                }
                 
-                if(startYear==endYear){
-                    for(var i=1;i<=12;i++){
-                        if(i>=startMonth&&i<=endMonth){
-                            $("#e"+i).removeAttr("disabled");
-                        }
-                    }
-                }else{
-                    if(startYear==yearSelected){
-                        for(var i=parseInt(startMonth);i<=12;i++){
-                            $("#e"+i).removeAttr("disabled");
-                        }
-                    }else if(endYear==yearSelected){
-                        for(var i=1;i<=endMonth;i++){
-                            $("#e"+i).removeAttr("disabled");
-                        }
-                    }else{
-                        for(var i=1;i<=12;i++){
-                            $("#e"+i).removeAttr("disabled");
-                        }
-                    }
-                }
+//                if(startYear==endYear){
+//                    for(var i=1;i<=12;i++){
+//                        if(i>=startMonth&&i<=endMonth){
+//                            $("#e"+i).removeAttr("disabled");
+//                        }
+//                    }
+//                }else{
+//                    if(startYear==yearSelected){
+//                        for(var i=parseInt(startMonth);i<=12;i++){
+//                            $("#e"+i).removeAttr("disabled");
+//                        }
+//                    }else if(endYear==yearSelected){
+//                        for(var i=1;i<=endMonth;i++){
+//                            $("#e"+i).removeAttr("disabled");
+//                        }
+//                    }else{
+//                        for(var i=1;i<=12;i++){
+//                            $("#e"+i).removeAttr("disabled");
+//                        }
+//                    }
+//                }
                 $.ajax({
                     url:'getTotalEffort.htm',
                     type:'post',
@@ -386,18 +384,18 @@
                    $("#addResTable").append("<tr>" +
                                             "<input type='hidden' name='year' value='"+(parseInt(startYear)+i)+"' class='year'/>" +
                                             "<td>"+(parseInt(startYear)+i)+"</td>" +
-                                            "<td><input type='number' name='jan' value='0' min='0' readonly disabled='true' style='width:55px;' step='0.1' class='month"+(parseInt(t)+1)+"'/></td>" +
-                                            "<td><input type='number' name='feb' value='0' min='0' readonly disabled='true' style='width:55px;' step='0.1' class='month"+(parseInt(t)+2)+"'/></td>" +
-                                            "<td><input type='number' name='mar' value='0' min='0' readonly disabled='true' style='width:55px;' step='0.1' class='month"+(parseInt(t)+3)+"'/></td>" +
-                                            "<td><input type='number' name='apr' value='0' min='0' readonly disabled='true' style='width:55px;' step='0.1' class='month"+(parseInt(t)+4)+"'/></td>" +
-                                            "<td><input type='number' name='may' value='0' min='0' readonly disabled='true' style='width:55px;' step='0.1' class='month"+(parseInt(t)+5)+"'/></td>" +
-                                            "<td><input type='number' name='jun' value='0' min='0' readonly disabled='true' style='width:55px;' step='0.1' class='month"+(parseInt(t)+6)+"'/></td>" +
-                                            "<td><input type='number' name='jul' value='0' min='0' readonly disabled='true' style='width:55px;' step='0.1' class='month"+(parseInt(t)+7)+"'/></td>" +
-                                            "<td><input type='number' name='aug' value='0' min='0' readonly disabled='true' style='width:55px;' step='0.1' class='month"+(parseInt(t)+8)+"'/></td>" +
-                                            "<td><input type='number' name='sep' value='0' min='0' readonly disabled='true' style='width:55px;' step='0.1' class='month"+(parseInt(t)+9)+"'/></td>" +
-                                            "<td><input type='number' name='oct' value='0' min='0' readonly disabled='true' style='width:55px;' step='0.1' class='month"+(parseInt(t)+10)+"'/></td>" +
-                                            "<td><input type='number' name='nov' value='0' min='0' readonly disabled='true' style='width:55px;' step='0.1' class='month"+(parseInt(t)+11)+"'/></td>" +
-                                            "<td><input type='number' name='dece' value='0' min='0' readonly disabled='true' style='width:55px;' step='0.1' class='month"+(parseInt(t)+12)+"'/></td>" +
+                                            "<td><input type='number' name='jan' value='0' min='0' disabled='true' style='width:55px;' step='0.1' class='month"+(parseInt(t)+1)+"'/></td>" +
+                                            "<td><input type='number' name='feb' value='0' min='0' disabled='true' style='width:55px;' step='0.1' class='month"+(parseInt(t)+2)+"'/></td>" +
+                                            "<td><input type='number' name='mar' value='0' min='0' disabled='true' style='width:55px;' step='0.1' class='month"+(parseInt(t)+3)+"'/></td>" +
+                                            "<td><input type='number' name='apr' value='0' min='0' disabled='true'  style='width:55px;' step='0.1' class='month"+(parseInt(t)+4)+"'/></td>" +
+                                            "<td><input type='number' name='may' value='0' min='0' disabled='true'  style='width:55px;' step='0.1' class='month"+(parseInt(t)+5)+"'/></td>" +
+                                            "<td><input type='number' name='jun' value='0' min='0' disabled='true'  style='width:55px;' step='0.1' class='month"+(parseInt(t)+6)+"'/></td>" +
+                                            "<td><input type='number' name='jul' value='0' min='0' disabled='true'  style='width:55px;' step='0.1' class='month"+(parseInt(t)+7)+"'/></td>" +
+                                            "<td><input type='number' name='aug' value='0' min='0' disabled='true'  style='width:55px;' step='0.1' class='month"+(parseInt(t)+8)+"'/></td>" +
+                                            "<td><input type='number' name='sep' value='0' min='0' disabled='true'  style='width:55px;' step='0.1' class='month"+(parseInt(t)+9)+"'/></td>" +
+                                            "<td><input type='number' name='oct' value='0' min='0' disabled='true'  style='width:55px;' step='0.1' class='month"+(parseInt(t)+10)+"'/></td>" +
+                                            "<td><input type='number' name='nov' value='0' min='0' disabled='true'  style='width:55px;' step='0.1' class='month"+(parseInt(t)+11)+"'/></td>" +
+                                            "<td><input type='number' name='dece' value='0' min='0' disabled='true'  style='width:55px;' step='0.1' class='month"+(parseInt(t)+12)+"'/></td>" +
                                         "</tr>");
                }
                 
@@ -449,10 +447,7 @@
                         }
                         
                         for(var i=1;i<=last;i++){
-                            if(i>=startMonth && i<=end){
-                                $(".month"+i).removeAttr("readonly");
-                                $(".month"+i).attr("max",Math.round( (1-res[i]) * 10 ) / 10);
-                            }
+                            $(".month"+i).attr("max",Math.round( (1-res[i]) * 10 ) / 10);
                         }
                         
                     }

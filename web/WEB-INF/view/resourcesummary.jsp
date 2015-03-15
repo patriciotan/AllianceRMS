@@ -13,13 +13,6 @@
                     <span style="color: #333333" class="glyphicon glyphicon-export" aria-hidden="true"></span> <b>Export table</b> <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="#" onClick ="$('#resSummary').tableExport({type:'json',escape:'false'});"> <img src='<c:url value="/res/images/json.png"/>' width='16px'> JSON</a></li>
-                    <li><a href="#" onClick ="$('#resSummary').tableExport({type:'json',escape:'false',ignoreColumn:'[2,3]'});"> <img src='<c:url value="/res/images/json.png"/>' width='16px'> JSON (ignoreColumn)</a></li>
-                    <li><a href="#" onClick ="$('#resSummary').tableExport({type:'json',escape:'true'});"> <img src='<c:url value="/res/images/json.png"/>' width='16px'> JSON (with Escape)</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#" onClick ="$('#resSummary').tableExport({type:'xml',escape:'false'});"> <img src='<c:url value="/res/images/xml.png"/>' width='16px'> XML</a></li>
-                    <li><a href="#" onClick ="$('#resSummary').tableExport({type:'sql'});"> <img src='<c:url value="/res/images/sql.png"/>' width='16px'> SQL</a></li>
-                    <li class="divider"></li>
                     <li><a href="#" onClick ="$('#resSummary').tableExport({type:'excel',escape:'false'});"> <img src='<c:url value="/res/images/xls.png"/>' width='16px'> XLS</a></li>
                     <li><a href="#" onClick ="$('#resSummary').tableExport({type:'csv',escape:'false'});"> <img src='<c:url value="/res/images/csv.png"/>' width='16px'> CSV</a></li>
                     <li><a href="#" onClick ="$('#resSummary').tableExport({type:'txt',escape:'false'});"> <img src='<c:url value="/res/images/txt.png"/>' width='16px'> TXT</a></li>
@@ -143,7 +136,7 @@
                                         <b>Resources Load Reminder for ${month} ${year}</b>
                                     </div>
                                     <div class="panel-body">
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <table class="table table-hover display tablee">
                                                 <thead>
                                                     <th style="text-align: left">Under load Employees</th>
@@ -154,22 +147,6 @@
                                                     <tr>   
                                                         <td style="text-align: left;" class="resName"><c:out value="${ul.fname} ${ul.lname}" /></td>						
                                                         <td style="text-align: right"><c:out value="${ul.jan}" /></td>
-                                                    </tr>
-                                                    </c:forEach>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <table class="table table-hover display tablee">
-                                                <thead>
-                                                    <th style="text-align: left">Full load Employees</th>
-                                                    <th style="text-align: right">Max effort</th>
-                                                </thead>
-                                                <tbody>
-                                                    <c:forEach items="${overload}" var="ol">
-                                                    <tr>   
-                                                        <td style="text-align: left;" class="resName"><c:out value="${ol.fname} ${ol.lname}" /></td>						
-                                                        <td style="text-align: right"><c:out value="${ol.jan}" /></td>   
                                                     </tr>
                                                     </c:forEach>
                                                 </tbody>
@@ -204,7 +181,12 @@
     <script>
         $(document).ready(function(){
            $("#3").attr("class","active"); 
-           $("#resSummary").dataTable();
+           $("#resSummary").dataTable({
+               "oLanguage":{
+                   "sInfoEmpty":'No Resources To Show',
+                   "sEmptyTable":'No Resources To Show',
+               }
+           });
            $('#reminder').modal('show');
            $(".resourceRow").tooltip();
            $('.tablee').DataTable({
@@ -212,7 +194,11 @@
                 "scrollCollapse": true,
                 "paging":         false,
                 "bInfo":          false,
-                "bFilter":        false
+                "bFilter":        false,
+               "oLanguage":{
+                   "sInfoEmpty":'No Resources To Show',
+                   "sEmptyTable":'No Resources To Show',
+               }
             });
            
             $("#resources").on('click',".resourceRow",function(){
