@@ -522,8 +522,10 @@ public class RMSController {
     {
         ModelAndView mav = new ModelAndView("addprojectfailed", "title", "RMS - Add Resource Failed");
         Boolean flag = true;
+        String[] name=effort.getEmpName().split(" ");
+        int empId=dbModel.getResourceId(name[0], name[1]);
         for(int i=0;i<effort.getCount();i++){
-            if(!dbModel.assignResource(effort.getEmpId(),effort.getProjId(),effort.getYear().get(i),effort.getJan().get(i),effort.getFeb().get(i),effort.getMar().get(i),effort.getApr().get(i),effort.getMay().get(i),effort.getJun().get(i),effort.getJul().get(i),effort.getAug().get(i),effort.getSep().get(i),effort.getOct().get(i),effort.getNov().get(i),effort.getDece().get(i))){
+            if(!dbModel.assignResource(empId,effort.getProjId(),effort.getYear().get(i),effort.getJan().get(i),effort.getFeb().get(i),effort.getMar().get(i),effort.getApr().get(i),effort.getMay().get(i),effort.getJun().get(i),effort.getJul().get(i),effort.getAug().get(i),effort.getSep().get(i),effort.getOct().get(i),effort.getNov().get(i),effort.getDece().get(i))){
                 flag=false;
             }
             if(flag==true){
@@ -574,10 +576,12 @@ public class RMSController {
     
     
     @RequestMapping(value = "/getSpecificEffortMonth")
-    public @ResponseBody String getSpecificEffortMonth(@RequestParam("year")int year,@RequestParam("noYears")int noYears,@RequestParam("resId")int resId, ModelMap model) throws Exception
+    public @ResponseBody String getSpecificEffortMonth(@RequestParam("year")int year,@RequestParam("noYears")int noYears,@RequestParam("resName")String resName, ModelMap model) throws Exception
     {
         ResultSet rs = null;
         String result="none";
+        String[] name=resName.split(" ");
+        int resId=dbModel.getResourceId(name[0], name[1]);
         for(int i=0;i<noYears;i++){
             rs=dbModel.getSpecificEmployeeTotalEffort(year+i,resId);
             if(rs.first()){

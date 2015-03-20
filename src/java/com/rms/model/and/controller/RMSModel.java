@@ -385,4 +385,14 @@ public class RMSModel {
         return x;
     }
     
+    public int getResourceId(String fname,String lname)throws Exception{
+        PreparedStatement ps;
+        sql = "SELECT resource_id FROM resource where first_name=? and last_name=?";
+        ps = con.prepareStatement(sql);
+        ps.setString(1,fname);
+        ps.setString(2, lname);
+        rs = ps.executeQuery();
+        rs.next();
+        return rs.getInt("resource_id");
+    }
 }

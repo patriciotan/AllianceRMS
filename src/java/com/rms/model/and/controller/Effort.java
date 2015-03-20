@@ -14,8 +14,17 @@ import java.util.List;
 public class Effort {
     
     private int projId,empId,count;
+    private String empName;
     private List<Float> jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dece;
     private List<Integer> year;
+
+    public String getEmpName() {
+        return empName;
+    }
+
+    public void setEmpName(String empName) {
+        this.empName = empName;
+    }
     
     public int getProjId() {
         return projId;

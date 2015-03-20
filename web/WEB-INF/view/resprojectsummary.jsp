@@ -91,8 +91,9 @@
                             <div class="panel-body">
                                 <div class="form-group">
                                     <label for="">Name:</label>
-                                    <select class="form-control" name="empId" required="required" id="empName">
-                                    </select>
+                                    <input id="empName" class="form-control" name="empName" required="required"  list="empData"/>
+                                    <datalist id="empData">
+                                    </datalist>
                                 </div>
                                 <div class="form-group">
                                     <label for="">Effort</label>
@@ -124,7 +125,7 @@
                                 <div style="text-align: right">
                                     <input type="hidden" name="projId" id="projectId" value="${projectId}"/>
                                     <input type="hidden" name="count" id="count"/>
-                                    <button class="btn btn-success" id="add-but" type="submit">
+                                    <button class="btn btn-success" id="add-but1" type="submit">
                                         <span style="color: #333333" class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> <b>Assign</b>
                                     </button>
                                     <button class="btn btn-danger" type="button" data-dismiss="modal">
@@ -378,6 +379,8 @@
                var endYear = end.substring(0,4);
                var diffYear=endYear-startYear;
                
+               $("#empName").val("");
+               $("#add-but1").attr("disabled","true");
                $("#count").val(diffYear+1);
                for(var i=0;i<=diffYear;i++){
                    var t=i*12;
@@ -405,53 +408,70 @@
                     type:'post',
                     data:{'id':${projectId}},
                     success:function(data,status){
-                        $("#empName").html("");
+                        $("#empData").html("");
                         var line = data.toString().split("$$$");
                         for(var x=0;x<line.length-1;x++){
                             var each = line[x].split("%-.");
-                            $("#empName").append('<option value="'+each[0]+'">'+each[1]+'</option>');
+                            $("#empData").append('<option value="'+each[1]+'"></option>');
                         }
-                        $("#empName").val("default");
                     }
                 })
             });
            
             $("#empName").change(function(){
+                var selectedName = $("#empName").val();
+                var obj=$("#empData").find("option[value='"+selectedName+"']");
+                
                 var start = $("#assignStart").val();
                 var end = $("#assignEnd").val();
-                
+
                 var startYear = start.substring(0,4);
                 var endYear = end.substring(0,4);
                 var diffYear=endYear-startYear;
-                
+
                 var startMonth = start.substring(5,7);
                 var endMonth = end.substring(5,7);
-                
+
                 var last=(diffYear+1)*12;
                 var end=parseInt(endMonth)+(diffYear*12);
-                
-                var resId=$(this).val();
-                $.ajax({
-                    url:'getSpecificEffortMonth.htm',
-                    type:'post',
-                    data:{'year':startYear,'noYears':diffYear+1,'resId':resId},
-                    success:function(data,status){
-                        var x = data.toString();
-                        var res=x.split("%");
-                        for(var x=0;x<=diffYear;x++){
-                            var t=x*12;
-                            for(var i=1;i<=12;i++){
-                               $(".month"+(parseInt(t)+i)).val("0");
-                               $(".month"+(parseInt(t)+i)).removeAttr("disabled");
-                            }
+                var resName=$(this).val();
+                if(obj.length==0){
+                    $("#add-but1").attr("disabled","true");
+                    for(var x=0;x<=diffYear;x++){
+                        var t=x*12;
+                        for(var i=1;i<=12;i++){
+                           $(".month"+(parseInt(t)+i)).val("0");
+                           $(".month"+(parseInt(t)+i)).attr("disabled","true");
                         }
-                        
-                        for(var i=1;i<=last;i++){
-                            $(".month"+i).attr("max",Math.round( (1-res[i]) * 10 ) / 10);
-                        }
-                        
                     }
-                });
+                }else{
+                    $.ajax({
+                        url:'getSpecificEffortMonth.htm',
+                        type:'post',
+                        data:{'year':startYear,'noYears':diffYear+1,'resName':resName},
+                        success:function(data,status){
+                            var x = data.toString();
+                            var res=x.split("%");
+                            for(var x=0;x<=diffYear;x++){
+                                var t=x*12;
+                                for(var i=1;i<=12;i++){
+                                   $(".month"+(parseInt(t)+i)).val("0");
+                                   $(".month"+(parseInt(t)+i)).removeAttr("disabled");
+                                }
+                            }
+
+                            for(var i=1;i<=last;i++){
+                                $(".month"+i).removeAttr("max");
+                                $(".month"+i).attr("max",Math.round( (1-res[i]) * 10 ) / 10);
+                                var z=Math.round( (1-res[i]) * 10 ) / 10;
+                                $(".month"+i).tooltip({'trigger':'focus','placement':"bottom"});
+                                $(".month"+i).attr('data-original-title'," Maximum effort for the selected month is "+z+".");
+                            }
+                            $(".month1").focus();
+                            $("#add-but1").removeAttr("disabled");
+                        }
+                    });
+                }
             });
         });
     </script>
